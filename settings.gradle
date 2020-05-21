@@ -1,0 +1,2 @@
+rootProject.name='Pulsar File Explorer'
+include ':app'
