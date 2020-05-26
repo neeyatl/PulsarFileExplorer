@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
 import androidx.fragment.app.ListFragment
 import java.io.File
 import java.util.*
@@ -68,6 +69,7 @@ class FilesListFragment : ListFragment() {
         values.apply {
             addAll(directories)
             addAll(files)
+            if (this.isEmpty()) add(getString(R.string.empty_folder_indicator_item_text))
         }
     }
 
@@ -90,6 +92,12 @@ class FilesListFragment : ListFragment() {
     override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)
         var filename = listAdapter?.getItem(position)
+
+        if (filename == getString(R.string.empty_folder_indicator_item_text)) {
+            Toast.makeText(context, R.string.empty_folder_indicator_item_text, Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
 
         filename = if (path.endsWith(File.separator)) path + filename
         else path + File.separator + filename

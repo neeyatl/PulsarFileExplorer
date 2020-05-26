@@ -6,4 +6,6 @@
     <string name="read_external_storage_permission_rationale">The app will not be able to read the storage if this permission is denied making it unusable.</string>
     <string name="permission_request">Read External Storage is a crucial permission for the app\'s functionality. Please enable it in your settings to be able to use this app.</string>
     <string name="show_settings">Show Settings</string>
+
+    <string name="empty_folder_indicator_item_text">(Folder is empty)</string>
 </resources>
