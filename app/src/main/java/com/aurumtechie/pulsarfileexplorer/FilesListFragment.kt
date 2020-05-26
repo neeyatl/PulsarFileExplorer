@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import java.io.File
+import java.util.*
 
 class FilesListFragment : ListFragment() {
 
@@ -50,13 +51,24 @@ class FilesListFragment : ListFragment() {
         if (!dir.canRead())
             activity?.title = "${activity?.title} (inaccessible)"
 
+        val directories = mutableListOf<String>()
+        val files = mutableListOf<String>()
+
         val list = dir.list()
         list?.let {
             for (file in it)
                 if (!file.startsWith("."))
-                    values.add(file)
+                    if (!file.contains("."))
+                        directories.add(file)
+                    else files.add(file)
         }
-        values.sort()
+        // Sorting directories and files separately so that they can be displayed separately
+        directories.sortBy { it.toLowerCase(Locale.ROOT) }
+        files.sortBy { it.toLowerCase(Locale.ROOT) }
+        values.apply {
+            addAll(directories)
+            addAll(files)
+        }
     }
 
     override fun onCreateView(
