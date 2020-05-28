@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
 
     companion object {
         private const val READ_REQUEST_CODE = 4579
+        private const val CURRENT_FRAGMENT_KEY = "current_fragment_restore"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,14 +26,24 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
                 this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
-        ) initializeFileExplorer() // If permissions are given, update the UI.
-        else {
+        ) { // If permissions are given, update the UI.
+            if (savedInstanceState == null) initializeFileExplorer()
+            /* else SavedInstanceState will be used by the fragment manager to restore the state*/
+        } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE
                 )
             ) requestReadExternalStoragePermission()
             else requestPermissionAndOpenSettings()
+        }
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save the state of the fragments so that it can be retrieved on activity recreation
+        supportFragmentManager.apply {
+            putFragment(outState, CURRENT_FRAGMENT_KEY, findFragmentById(R.id.directoryContainer)!!)
         }
     }
 
