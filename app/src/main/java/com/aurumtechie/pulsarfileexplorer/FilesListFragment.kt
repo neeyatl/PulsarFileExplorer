@@ -151,22 +151,25 @@ class FilesListFragment : ListFragment() {
         )
     }
 
-    private fun getMimeType(url: String): String = when {
-        url.endsWith(".doc") || url.endsWith(".docx") -> "application/msword"
-        url.endsWith(".pdf") -> "application/pdf"
-        url.endsWith(".ppt") || url.endsWith(".pptx") -> "application/vnd.ms-powerpoint"
-        url.endsWith(".xls") || url.endsWith(".xlsx") -> "application/vnd.ms-excel"
-        url.endsWith(".zip") || url.endsWith(".rar") -> "application/x-wav"
-        url.endsWith(".rtf") -> "application/rtf"
-        url.endsWith(".wav") || url.endsWith(".mp3")
-                || url.endsWith(".m4a") || url.endsWith(".ogg") -> "audio/x-wav"
-        url.endsWith(".gif") -> "image/gif"
-        url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".png") -> "image/jpeg"
-        url.endsWith(".txt") || url.endsWith(".mht")
-                || url.endsWith(".mhtml") || url.endsWith(".html") -> "text/plain"
-        url.endsWith(".3gp") || url.endsWith(".mpg")
-                || url.endsWith(".mpeg") || url.endsWith(".mpe")
-                || url.endsWith(".mp4") || url.endsWith(".avi") -> "video/*"
+    /** Function to get the MimeType from a filename by comparing it's file extension
+     * @author Neeyat Lotlikar
+     * @param filename String name of the file. Can also be a path.
+     * @return String MimeType*/
+    private fun getMimeType(filename: String): String = when (filename.subSequence(
+        filename.lastIndexOf('.'),
+        filename.length
+    )) {
+        ".doc", ".docx" -> "application/msword"
+        ".pdf" -> "application/pdf"
+        ".ppt", "pptx" -> "application/vnd.ms-powerpoint"
+        ".xls", ".xlsx" -> "application/vnd.ms-excel"
+        ".zip", ".rar" -> "application/x-wav"
+        ".rtf" -> "application/rtf"
+        ".wav", ".mp3", ".m4a", ".ogg" -> "audio/x-wav"
+        ".gif" -> "image/gif"
+        ".jpg", ".jpeg", ".png" -> "image/jpeg"
+        ".txt", ".mht", ".mhtml", ".html" -> "text/plain"
+        ".3gp", ".mpg", ".mpeg", ".mpe", ".mp4", ".avi" -> "video/*"
         else -> "*/*"
     }
 
