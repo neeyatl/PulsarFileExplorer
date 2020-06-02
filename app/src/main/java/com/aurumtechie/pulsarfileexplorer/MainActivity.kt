@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
             else requestPermissionAndOpenSettings()
         }
     }
-    
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save the state of the fragments so that it can be retrieved on activity recreation
@@ -71,7 +71,10 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
         if (supportFragmentManager.backStackEntryCount > 0)
             supportFragmentManager.findFragmentById(R.id.directoryContainer).let {
                 if (it is FilesListFragment)
-                    this@MainActivity.title = it.currentPath
+                    title = // Show the app name when the folder is at the root
+                        if (it.currentPath == FilesListFragment.ROOT_FLAG) getString(R.string.app_name)
+                        // Display the folder name only
+                        else Helper.getFilenameForPath(it.currentPath)
             }
     }
 
