@@ -52,6 +52,34 @@ class FilesListFragment : ListFragment() {
         if (!dir.canRead())
             activity?.title = "${activity?.title} (inaccessible)"
 
+        updateValues(dir)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        listAdapter = context?.let {
+            ArrayAdapter(
+                it,
+                android.R.layout.simple_list_item_2,
+                android.R.id.text1,
+                values
+            )
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateValues()
+        (listAdapter as ArrayAdapter<*>).notifyDataSetChanged()
+    }
+
+    private fun updateValues(dir: File = File(path)) {
+        if (values.isNotEmpty()) values.clear()
+
         val directories = mutableListOf<String>()
         val files = mutableListOf<String>()
 
@@ -71,22 +99,6 @@ class FilesListFragment : ListFragment() {
             addAll(files)
             if (this.isEmpty()) add(getString(R.string.empty_folder_indicator_item_text))
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        listAdapter = context?.let {
-            ArrayAdapter(
-                it,
-                android.R.layout.simple_list_item_2,
-                android.R.id.text1,
-                values
-            )
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
