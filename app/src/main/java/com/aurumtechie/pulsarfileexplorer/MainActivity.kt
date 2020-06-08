@@ -62,20 +62,24 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
     }
 
     override fun onBackPressed() {
-        // pop the root directory fragment and then exit the app
+        // Exit app onBackPressed when only the root fragment is present in the backStack
         if (supportFragmentManager.backStackEntryCount == 1)
+            startActivity(Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_HOME)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }).also { finish() }
+        else {
             super.onBackPressed()
-        super.onBackPressed()
-
-        // Update the title as the path of the current fragment after popping the previous one
-        if (supportFragmentManager.backStackEntryCount > 0)
-            supportFragmentManager.findFragmentById(R.id.directoryContainer).let {
-                if (it is FilesListFragment)
-                    title = // Show the app name when the folder is at the root
-                        if (it.currentPath == FilesListFragment.ROOT_FLAG) getString(R.string.app_name)
-                        // Display the folder name only
-                        else Helper.getFilenameForPath(it.currentPath)
-            }
+            // Update the title as the path of the current fragment after popping the previous one
+            if (supportFragmentManager.backStackEntryCount > 0)
+                supportFragmentManager.findFragmentById(R.id.directoryContainer).let {
+                    if (it is FilesListFragment)
+                        title = // Show the app name when the folder is at the root
+                            if (it.currentPath == FilesListFragment.ROOT_FLAG) getString(R.string.app_name)
+                            // Display the folder name only
+                            else Helper.getFilenameForPath(it.currentPath)
+                }
+        }
     }
 
     override fun onRequestPermissionsResult(

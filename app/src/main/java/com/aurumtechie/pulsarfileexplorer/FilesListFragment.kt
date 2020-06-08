@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.ListFragment
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.util.*
 
@@ -123,7 +123,7 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment() {
         var filename = listAdapter?.getItem(position).toString()
 
         if (filename == getString(R.string.empty_folder_indicator_item_text)) {
-            Toast.makeText(context, R.string.empty_folder_indicator_item_text, Toast.LENGTH_SHORT)
+            Snackbar.make(v, R.string.empty_folder_indicator_item_text, Snackbar.LENGTH_SHORT)
                 .show()
             return
         }
