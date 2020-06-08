@@ -17,10 +17,7 @@ import java.util.*
 
 /** ListFragment class to display all the files and folders present inside a folder
  * @author Neeyat Lotlikar */
-class FilesListFragment : ListFragment() {
-
-    private var path: String = ROOT_FLAG
-
+class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment() {
     val currentPath
         get() = path
 
@@ -28,9 +25,6 @@ class FilesListFragment : ListFragment() {
         private const val PATH_EXTRA = "path_extra"
 
         const val ROOT_FLAG = "root_path"
-
-        fun getInstance(path: String): FilesListFragment =
-            FilesListFragment().apply { this.path = path }
 
         interface DirectoryExplorer {
             fun onDirectoryClick(path: String)
@@ -154,22 +148,26 @@ class FilesListFragment : ListFragment() {
     /** Function to get the MimeType from a filename by comparing it's file extension
      * @author Neeyat Lotlikar
      * @param filename String name of the file. Can also be a path.
-     * @return String MimeType*/
+     * @return String MimeType */
     private fun getMimeType(filename: String): String = when (filename.subSequence(
         filename.lastIndexOf('.'),
         filename.length
-    )) {
+    ).toString().toLowerCase(Locale.ROOT)) {
         ".doc", ".docx" -> "application/msword"
         ".pdf" -> "application/pdf"
-        ".ppt", "pptx" -> "application/vnd.ms-powerpoint"
+        ".ppt", ".pptx" -> "application/vnd.ms-powerpoint"
         ".xls", ".xlsx" -> "application/vnd.ms-excel"
         ".zip", ".rar" -> "application/x-wav"
+        ".7z" -> "application/x-7z-compressed"
         ".rtf" -> "application/rtf"
-        ".wav", ".mp3", ".m4a", ".ogg" -> "audio/x-wav"
+        ".wav", ".mp3", ".m4a", ".ogg", ".oga", ".weba" -> "audio/*"
+        ".ogx" -> "application/ogg"
         ".gif" -> "image/gif"
-        ".jpg", ".jpeg", ".png" -> "image/jpeg"
+        ".jpg", ".jpeg", ".png", ".bmp" -> "image/*"
+        ".csv" -> "text/csv"
+        ".m3u8" -> "application/vnd.apple.mpegurl"
         ".txt", ".mht", ".mhtml", ".html" -> "text/plain"
-        ".3gp", ".mpg", ".mpeg", ".mpe", ".mp4", ".avi" -> "video/*"
+        ".3gp", ".mpg", ".mpeg", ".mpe", ".mp4", ".avi", ".ogv", ".webm" -> "video/*"
         else -> "*/*"
     }
 

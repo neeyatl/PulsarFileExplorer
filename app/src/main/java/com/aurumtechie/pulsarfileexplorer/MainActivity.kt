@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
     // Invoked from the fragment. Adds another fragment to the back stack representing the new directory the user clicked on.
     override fun onDirectoryClick(path: String) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.directoryContainer, FilesListFragment.getInstance(path))
+            .replace(R.id.directoryContainer, FilesListFragment(path))
             .addToBackStack(null).commit()
     }
 
