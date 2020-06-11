@@ -1,9 +1,19 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.MaterialComponents">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="MyActionBar" parent="Widget.MaterialComponents.Light.ActionBar.Solid">
+        <item name="background">@color/colorPrimary</item>
+    </style>
+
+    <style name="SnackbarButton" parent="@style/Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@android:color/darker_gray</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
 </resources>
