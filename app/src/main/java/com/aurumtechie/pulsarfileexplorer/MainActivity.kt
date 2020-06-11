@@ -5,16 +5,20 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import java.io.File
 
 
 class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryExplorer {
 
     companion object {
-        private const val READ_REQUEST_CODE = 4579
+        private const val REQUEST_CODE = 4579
         private const val CURRENT_FRAGMENT_KEY = "current_fragment_restore"
     }
 
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
                     this,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE
                 )
-            ) requestReadExternalStoragePermission()
+            ) requestExternalStoragePermission()
             else requestPermissionAndOpenSettings()
         }
     }
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            READ_REQUEST_CODE -> {
+            REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     initializeFileExplorer()
                 else if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -97,11 +101,11 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
                         android.Manifest.permission.READ_EXTERNAL_STORAGE
                     )
                 ) // If permission was denied once before but the user wasn't informed why the permission is necessary, do so.
-                    AlertDialog.Builder(this)
-                        .setMessage(R.string.read_external_storage_permission_rationale)
+                    MaterialAlertDialogBuilder(this)
+                        .setMessage(R.string.external_storage_permission_rationale)
                         .setPositiveButton(android.R.string.ok) { dialog, _ ->
                             dialog.dismiss()
-                            requestReadExternalStoragePermission()
+                            requestExternalStoragePermission()
                         }.show()
                 else /* If user has chosen to not be shown permission requests any longer,
                      inform the user about it's importance and redirect her/him to device settings
@@ -111,10 +115,14 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
         }
     }
 
-    private fun requestReadExternalStoragePermission() = ActivityCompat.requestPermissions(
+
+    private fun requestExternalStoragePermission() = ActivityCompat.requestPermissions(
         this,
-        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-        READ_REQUEST_CODE
+        arrayOf(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ),
+        REQUEST_CODE
     )
 
     private fun requestPermissionAndOpenSettings() = AlertDialog.Builder(this)
@@ -126,5 +134,50 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
                 data = Uri.fromParts("package", packageName, null)
             })
         }.show()
+
+
+    /** Creates a new file in the current folder (function is an onClick function defined in activity layout)
+     * @author Neeyat Lotlikar
+     * @param view FloatingActionButton View object used to show a message to the user
+     * @see com.google.android.material.floatingactionbutton.FloatingActionButton
+     * @see R.layout.activity_main
+     */
+    fun addNewFile(view: View) {
+
+        val activeFragment = // Get the fragment which is currently active
+            (supportFragmentManager.findFragmentById(R.id.directoryContainer) as FilesListFragment)
+
+        val dir = File(activeFragment.currentPath)
+        if (!dir.canWrite()) {
+            Snackbar.make(
+                view,
+                R.string.cannot_write_to_folder,
+                Snackbar.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        val fileName = "New File ${System.currentTimeMillis()}" // Default file name
+
+        val file = File("${dir.absolutePath}${File.separatorChar}$fileName.txt")
+        if (file.createNewFile()) {
+
+            // Update activeFragmentUI
+            activeFragment.updateListViewItems()
+
+            Snackbar.make(
+                view,
+                R.string.file_created_successfully,
+                Snackbar.LENGTH_LONG
+            ).setAction(R.string.rename) {
+                activeFragment.renameFile(file)
+            }.show()
+        } else
+            Snackbar.make(
+                view,
+                R.string.file_cannot_be_created,
+                Snackbar.LENGTH_LONG
+            ).show()
+    }
 
 }
