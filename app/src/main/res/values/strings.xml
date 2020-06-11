@@ -9,16 +9,14 @@
 
     <string name="empty_folder_indicator_item_text">(Folder is empty)</string>
 
-    <string name="saving_file">Saving File</string>
     <string name="file_saved_successfully">File Saved Successfully</string>
     <string name="file_created_successfully">File Created Successfully</string>
-    <string name="error_while_saving">An error occurred while saving the file.</string>
     <string name="save">Save</string>
 
     <string name="enter_file_name">Enter file name</string>
     <string name="cannot_write_to_folder">Cannot write to this folder</string>
     <string name="file_cannot_be_created">File cannot be created</string>
-    <string name="filename_cannot_be_empty">Filename cannot be empty</string>
+    <string name="name_cannot_be_empty">Name cannot be empty</string>
     <string name="rename">Rename</string>
     <string name="file_cannot_be_renamed">File cannot be renamed</string>
     <string name="file_already_exists">File with the same name already exists</string>
@@ -27,5 +25,11 @@
     <string name="directory_delete_warning">All files in the folder will be lost forever. Are you sure you want to continue?</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="delete_file">Delete File</string>
-    <string name="filename_cannot_start_with_a_dot">File name cannot start with a dot (.)</string>
+    <string name="name_cannot_start_with_a_dot">Name cannot start with a dot (.)</string>
+    <string name="add_file">Add File</string>
+    <string name="add_folder">Add Folder</string>
+    <string name="folder_created_successfully">Folder Created Successfully</string>
+    <string name="folder_cannot_be_created">Folder Created Successfully</string>
+    <string name="folder_saved_successfully">Folder Saved Successfully</string>
+    <string name="folder_cannot_be_renamed">Folder cannot be renamed</string>
 </resources>

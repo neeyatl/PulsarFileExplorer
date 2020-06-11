@@ -194,7 +194,6 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
         super.onSaveInstanceState(outState)
     }
 
-
     override fun onItemLongClick(
         parent: AdapterView<*>?,
         view: View?,
@@ -269,7 +268,7 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
                 if (inputFileName.isEmpty() || inputFileName.isBlank()) {
                     Snackbar.make(
                         listView,
-                        R.string.filename_cannot_be_empty,
+                        R.string.name_cannot_be_empty,
                         Snackbar.LENGTH_SHORT
                     ).show()
                     return@setPositiveButton
@@ -278,13 +277,16 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
                 if (inputFileName.startsWith('.')) {
                     Snackbar.make(
                         listView,
-                        R.string.filename_cannot_start_with_a_dot,
+                        R.string.name_cannot_start_with_a_dot,
                         Snackbar.LENGTH_SHORT
                     ).show()
                     return@setPositiveButton
                 }
 
-                val finalFileName = "$currentPath${File.separator}$inputFileName.txt"
+                val finalFileName =
+                    StringBuilder(currentPath + File.separator + inputFileName).apply {
+                        if (file.isFile) append(".txt")
+                    }.toString()
 
                 File(currentPath).listFiles()?.forEach {
                     if (it.absolutePath == finalFileName) {
@@ -295,10 +297,18 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
                 }
 
                 if (file.renameTo(File(finalFileName)))
-                    Snackbar.make(listView, R.string.file_saved_successfully, Snackbar.LENGTH_SHORT)
-                        .show()
-                else Snackbar.make(listView, R.string.file_cannot_be_renamed, Snackbar.LENGTH_SHORT)
-                    .show()
+                    Snackbar.make(
+                        listView,
+                        if (file.isFile) R.string.file_saved_successfully
+                        else R.string.folder_saved_successfully,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                else Snackbar.make(
+                    listView,
+                    if (file.isFile) R.string.file_cannot_be_renamed
+                    else R.string.folder_cannot_be_renamed,
+                    Snackbar.LENGTH_SHORT
+                ).show()
 
                 updateListViewItems()
             }.create()

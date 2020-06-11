@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import androidx.appcompat.app.AlertDialog
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
         REQUEST_CODE
     )
 
-    private fun requestPermissionAndOpenSettings() = AlertDialog.Builder(this)
+    private fun requestPermissionAndOpenSettings() = MaterialAlertDialogBuilder(this)
         .setMessage(R.string.permission_request)
         .setPositiveButton(R.string.show_settings) { dialog, _ ->
             dialog.dismiss()
@@ -157,27 +157,60 @@ class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryE
             return
         }
 
-        val fileName = "New File ${System.currentTimeMillis()}" // Default file name
+        val fileName = "new_${System.currentTimeMillis()}" // Default file name
 
-        val file = File("${dir.absolutePath}${File.separatorChar}$fileName.txt")
-        if (file.createNewFile()) {
+        PopupMenu(this, view).apply {
+            menuInflater.inflate(R.menu.fab_popup_menu, menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.add_file -> {
+                        val file = File("${dir.absolutePath}${File.separatorChar}$fileName.txt")
+                        if (file.createNewFile()) {
 
-            // Update activeFragmentUI
-            activeFragment.updateListViewItems()
+                            // Update activeFragmentUI
+                            activeFragment.updateListViewItems()
 
-            Snackbar.make(
-                view,
-                R.string.file_created_successfully,
-                Snackbar.LENGTH_LONG
-            ).setAction(R.string.rename) {
-                activeFragment.renameFile(file)
-            }.show()
-        } else
-            Snackbar.make(
-                view,
-                R.string.file_cannot_be_created,
-                Snackbar.LENGTH_LONG
-            ).show()
+                            Snackbar.make(
+                                view,
+                                R.string.file_created_successfully,
+                                Snackbar.LENGTH_LONG
+                            ).setAction(R.string.rename) {
+                                activeFragment.renameFile(file)
+                            }.show()
+                        } else
+                            Snackbar.make(
+                                view,
+                                R.string.file_cannot_be_created,
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        true
+                    }
+                    R.id.add_folder -> {
+                        val file = File("${dir.absolutePath}${File.separatorChar}$fileName")
+                        if (file.mkdir()) {
+
+                            // Update activeFragmentUI
+                            activeFragment.updateListViewItems()
+
+                            Snackbar.make(
+                                view,
+                                R.string.folder_created_successfully,
+                                Snackbar.LENGTH_LONG
+                            ).setAction(R.string.rename) {
+                                activeFragment.renameFile(file)
+                            }.show()
+                        } else
+                            Snackbar.make(
+                                view,
+                                R.string.folder_cannot_be_created,
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }.show()
     }
 
 }

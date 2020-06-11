@@ -11,9 +11,4 @@
         <item name="background">@color/colorPrimary</item>
     </style>
 
-    <style name="SnackbarButton" parent="@style/Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@android:color/darker_gray</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
 </resources>
