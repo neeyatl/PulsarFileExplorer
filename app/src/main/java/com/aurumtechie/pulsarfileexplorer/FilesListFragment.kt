@@ -1,5 +1,6 @@
 package com.aurumtechie.pulsarfileexplorer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -9,13 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ListView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import androidx.fragment.app.ListFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
@@ -194,17 +193,38 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
         super.onSaveInstanceState(outState)
     }
 
+    @SuppressLint("InflateParams")
     override fun onItemLongClick(
         parent: AdapterView<*>?,
         view: View?,
         position: Int,
         id: Long
     ): Boolean {
-        requestFileDeletion(
-            File(
-                currentPath + File.separator + listAdapter?.getItem(position).toString()
-            )
+
+        val clickedFile = File(
+            currentPath + File.separator + listAdapter?.getItem(position).toString()
         )
+
+        context?.let { context ->
+            val bottomSheetDialog = BottomSheetDialog(context)
+            val sheetView = activity?.layoutInflater
+                ?.inflate(R.layout.bottom_sheet_dialog_options, null)
+            if (sheetView != null)
+                bottomSheetDialog.setContentView(sheetView)
+            bottomSheetDialog.show()
+
+            sheetView?.findViewById<TextView>(R.id.rename_text_view)
+                ?.setOnClickListener {
+                    bottomSheetDialog.dismiss()
+                    renameFile(clickedFile)
+                }
+
+            sheetView?.findViewById<TextView>(R.id.delete_text_view)
+                ?.setOnClickListener {
+                    bottomSheetDialog.dismiss()
+                    requestFileDeletion(clickedFile)
+                }
+        }
         return true
     }
 
@@ -250,6 +270,16 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
      * @author Neeyat Lotlikar
      * @param file File object of the file to be renamed*/
     fun renameFile(file: File) {
+
+        if (!file.canWrite()) {
+            Snackbar.make(
+                listView,
+                R.string.file_cannot_be_renamed,
+                Snackbar.LENGTH_SHORT
+            ).show()
+            return
+        }
+
         val fileNameEditText = EditText(context).apply {
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
