@@ -14,7 +14,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
-
 class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryExplorer {
 
     companion object {

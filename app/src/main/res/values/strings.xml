@@ -32,4 +32,6 @@
     <string name="folder_cannot_be_created">Folder Created Successfully</string>
     <string name="folder_saved_successfully">Folder Saved Successfully</string>
     <string name="folder_cannot_be_renamed">Folder cannot be renamed</string>
+    <string name="delete">Delete</string>
+
 </resources>
