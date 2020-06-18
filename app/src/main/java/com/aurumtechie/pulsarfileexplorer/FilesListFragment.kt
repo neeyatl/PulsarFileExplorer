@@ -166,27 +166,30 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
      * @author Neeyat Lotlikar
      * @param filename String name of the file. Can also be a path.
      * @return String MimeType */
-    private fun getMimeType(filename: String): String = when (filename.subSequence(
-        filename.lastIndexOf('.'),
-        filename.length
-    ).toString().toLowerCase(Locale.ROOT)) {
-        ".doc", ".docx" -> "application/msword"
-        ".pdf" -> "application/pdf"
-        ".ppt", ".pptx" -> "application/vnd.ms-powerpoint"
-        ".xls", ".xlsx" -> "application/vnd.ms-excel"
-        ".zip", ".rar" -> "application/x-wav"
-        ".7z" -> "application/x-7z-compressed"
-        ".rtf" -> "application/rtf"
-        ".wav", ".mp3", ".m4a", ".ogg", ".oga", ".weba" -> "audio/*"
-        ".ogx" -> "application/ogg"
-        ".gif" -> "image/gif"
-        ".jpg", ".jpeg", ".png", ".bmp" -> "image/*"
-        ".csv" -> "text/csv"
-        ".m3u8" -> "application/vnd.apple.mpegurl"
-        ".txt", ".mht", ".mhtml", ".html" -> "text/plain"
-        ".3gp", ".mpg", ".mpeg", ".mpe", ".mp4", ".avi", ".ogv", ".webm" -> "video/*"
-        else -> "*/*"
-    }
+    private fun getMimeType(filename: String): String = if (filename.lastIndexOf('.') == -1)
+        "resource/folder"
+    else
+        when (filename.subSequence(
+            filename.lastIndexOf('.'),
+            filename.length
+        ).toString().toLowerCase(Locale.ROOT)) {
+            ".doc", ".docx" -> "application/msword"
+            ".pdf" -> "application/pdf"
+            ".ppt", ".pptx" -> "application/vnd.ms-powerpoint"
+            ".xls", ".xlsx" -> "application/vnd.ms-excel"
+            ".zip", ".rar" -> "application/x-wav"
+            ".7z" -> "application/x-7z-compressed"
+            ".rtf" -> "application/rtf"
+            ".wav", ".mp3", ".m4a", ".ogg", ".oga", ".weba" -> "audio/*"
+            ".ogx" -> "application/ogg"
+            ".gif" -> "image/gif"
+            ".jpg", ".jpeg", ".png", ".bmp" -> "image/*"
+            ".csv" -> "text/csv"
+            ".m3u8" -> "application/vnd.apple.mpegurl"
+            ".txt", ".mht", ".mhtml", ".html" -> "text/plain"
+            ".3gp", ".mpg", ".mpeg", ".mpe", ".mp4", ".avi", ".ogv", ".webm" -> "video/*"
+            else -> "*/*"
+        }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(PATH_EXTRA, path)
@@ -223,6 +226,23 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
                 ?.setOnClickListener {
                     bottomSheetDialog.dismiss()
                     requestFileDeletion(clickedFile)
+                }
+
+            sheetView?.findViewById<TextView>(R.id.share_text_view)
+                ?.setOnClickListener {
+                    bottomSheetDialog.dismiss()
+                    startActivity(
+                        Intent.createChooser(
+                            Intent(Intent.ACTION_SEND).apply {
+                                setDataAndType(
+                                    Uri.fromFile(clickedFile),
+                                    getMimeType(clickedFile.name)
+                                )
+                                putExtra(Intent.EXTRA_STREAM, Uri.fromFile(clickedFile))
+                            },
+                            getString(R.string.share_using)
+                        )
+                    )
                 }
         }
         return true

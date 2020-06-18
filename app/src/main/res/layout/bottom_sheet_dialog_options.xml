@@ -26,4 +26,14 @@
         android:layout_height="wrap_content"
         android:text="@string/delete"/>
 
+    <TextView
+        android:id="@+id/share_text_view"
+        android:drawableStart="@drawable/share"
+        android:drawablePadding="24dp"
+        android:padding="20dp"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/share"/>
+
 </LinearLayout>
