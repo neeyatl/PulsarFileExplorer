@@ -35,5 +35,7 @@
     <string name="folder_cannot_be_renamed">Folder cannot be renamed</string>
     <string name="delete">Delete</string>
     <string name="share">Share</string>
-
+    <string name="delete_folder">Delete Folder</string>
+    <string name="folder_deleted_successfully">Folder Deleted Successfully</string>
+    <string name="recursive_folder_deletion_error">Error while deleting folder. Partial deletion may have taken place.</string>
 </resources>

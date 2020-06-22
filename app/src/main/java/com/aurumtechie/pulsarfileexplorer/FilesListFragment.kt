@@ -262,22 +262,35 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
         }
 
         MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.delete_file)
+            .setTitle(if (file.isDirectory) R.string.delete_folder else R.string.delete_file)
             .setMessage(if (file.isDirectory) R.string.directory_delete_warning else R.string.are_you_sure)
             .setPositiveButton(android.R.string.yes) { dialog, _ ->
                 dialog.dismiss()
 
-                if (file.delete())
-                    Snackbar.make(
+                if (file.isFile)
+                    if (file.delete())
+                        Snackbar.make(
+                            listView,
+                            R.string.file_deleted_successfully,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    else Snackbar.make(
                         listView,
-                        R.string.file_deleted_successfully,
+                        R.string.file_cannot_be_deleted,
                         Snackbar.LENGTH_SHORT
                     ).show()
-                else Snackbar.make(
-                    listView,
-                    R.string.file_cannot_be_deleted,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                else if (file.isDirectory)
+                    if (file.deleteRecursively())
+                        Snackbar.make(
+                            listView,
+                            R.string.folder_deleted_successfully,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    else Snackbar.make(
+                        listView,
+                        R.string.recursive_folder_deletion_error,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
 
                 updateListViewItems()
             }.setNegativeButton(android.R.string.no) { dialog, _ ->
@@ -335,7 +348,8 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
 
                 val finalFileName =
                     StringBuilder(currentPath + File.separator + inputFileName).apply {
-                        if (file.isFile) append(".txt")
+                        // Make it a txt file by default if it doesn't contain a file extension defined by the user
+                        if (file.isFile && !inputFileName.contains('.')) append(".txt")
                     }.toString()
 
                 File(currentPath).listFiles()?.forEach {
