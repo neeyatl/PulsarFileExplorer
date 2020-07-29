@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import androidx.fragment.app.ListFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -318,12 +317,16 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            setPadding(10)
+            setPadding(40, 40, 40, 10)
             hint = getString(R.string.enter_file_name)
             inputType = InputType.TYPE_CLASS_TEXT
+            setText(file.name)
+            setSelectAllOnFocus(true)
         }
 
-        val dialog = MaterialAlertDialogBuilder(context).setCustomTitle(fileNameEditText)
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.rename)
+            .setView(fileNameEditText)
             .setPositiveButton(R.string.save) { dialog, _ ->
                 dialog.dismiss()
 
