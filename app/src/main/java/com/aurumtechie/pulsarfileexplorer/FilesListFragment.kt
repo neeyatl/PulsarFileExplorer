@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -312,24 +311,17 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
             return
         }
 
-        val fileNameEditText = EditText(context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            setPadding(40, 40, 40, 10)
-            hint = getString(R.string.enter_file_name)
-            inputType = InputType.TYPE_CLASS_TEXT
-            setText(file.name)
-            setSelectAllOnFocus(true)
-        }
+        val fileNameEditText =
+            (layoutInflater.inflate(R.layout.rename_edittext, null, false) as EditText).apply {
+                setText(file.name)
+            }
 
         val dialog = MaterialAlertDialogBuilder(context)
             .setTitle(R.string.rename)
             .setView(fileNameEditText)
             .setPositiveButton(R.string.save) { dialog, _ ->
                 dialog.dismiss()
-
+                
                 val inputFileName = fileNameEditText.text.toString().trim()
                 if (inputFileName.isEmpty() || inputFileName.isBlank()) {
                     Snackbar.make(
