@@ -214,19 +214,19 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
                 bottomSheetDialog.setContentView(sheetView)
             bottomSheetDialog.show()
 
-            sheetView?.findViewById<TextView>(R.id.rename_text_view)
+            sheetView?.findViewById<ImageView>(R.id.rename_text_view)
                 ?.setOnClickListener {
                     bottomSheetDialog.dismiss()
                     renameFile(clickedFile)
                 }
 
-            sheetView?.findViewById<TextView>(R.id.delete_text_view)
+            sheetView?.findViewById<ImageView>(R.id.delete_text_view)
                 ?.setOnClickListener {
                     bottomSheetDialog.dismiss()
                     requestFileDeletion(clickedFile)
                 }
 
-            sheetView?.findViewById<TextView>(R.id.share_text_view)
+            sheetView?.findViewById<ImageView>(R.id.share_text_view)
                 ?.setOnClickListener {
                     bottomSheetDialog.dismiss()
                     startActivity(
@@ -321,7 +321,7 @@ class FilesListFragment(private var path: String = ROOT_FLAG) : ListFragment(),
             .setView(fileNameEditText)
             .setPositiveButton(R.string.save) { dialog, _ ->
                 dialog.dismiss()
-                
+
                 val inputFileName = fileNameEditText.text.toString().trim()
                 if (inputFileName.isEmpty() || inputFileName.isBlank()) {
                     Snackbar.make(
