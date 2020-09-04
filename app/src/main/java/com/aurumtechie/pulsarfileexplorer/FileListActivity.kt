@@ -14,7 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
-class MainActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryExplorer {
+class FileListActivity : AppCompatActivity(), FilesListFragment.Companion.DirectoryExplorer {
 
     companion object {
         private const val REQUEST_CODE = 4579
