@@ -38,4 +38,6 @@
     <string name="delete_folder">Delete Folder</string>
     <string name="folder_deleted_successfully">Folder Deleted Successfully</string>
     <string name="recursive_folder_deletion_error">Error while deleting folder. Partial deletion may have taken place.</string>
+    <string name="refresh">Refresh</string>
+    <string name="refreshed_successfully">Refreshed Successfully. Storage devices list updated.</string>
 </resources>

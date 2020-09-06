@@ -19,13 +19,13 @@ class OpenFolderTest {
     @Test
     fun openFolderUsingAnIntent() {
         val appContext = getInstrumentation().targetContext
-        appContext.startActivity(Intent(appContext, FileListActivity::class.java).apply {
+        appContext.startActivity(Intent(appContext, FilesListActivity::class.java).apply {
             setDataAndType(Uri.fromFile(File("/storage/emulated/0/Notes")), "resource/folder")
         })
         val currentActivity = getCurrentActivity()
-        assertTrue(currentActivity is FileListActivity)
+        assertTrue(currentActivity is FilesListActivity)
         val activeFragment =
-            (currentActivity as FileListActivity).supportFragmentManager.findFragmentById(R.id.directoryContainer)
+            (currentActivity as FilesListActivity).supportFragmentManager.findFragmentById(R.id.directoryContainer)
         assertTrue(activeFragment is FilesListFragment)
         assertEquals(
             "/storage/emulated/0/Notes",
