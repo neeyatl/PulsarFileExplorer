@@ -213,7 +213,16 @@ class FilesListFragment(private var path: String) : ListFragment(),
                 "${if (file.isDirectory) getString(R.string.delete_folder) else getString(R.string.delete_file)} " +
                         "\"${file.name}\""
             )
-            .setMessage(if (file.isDirectory) R.string.directory_delete_warning else R.string.are_you_sure)
+            .setMessage(
+                if (file.isDirectory)
+                    file.list()
+                        ?.fold(0) { acc, path -> acc + if (File(file.absolutePath + File.separator + path).isDirectory) 1 else 0 }
+                        .toString() + " folders and "
+                            + file.list()
+                        ?.fold(0) { acc, path -> acc + if (File(file.absolutePath + File.separator + path).isFile) 1 else 0 }
+                        .toString() + " files are present. " + getString(R.string.directory_delete_warning)
+                else getString(R.string.are_you_sure)
+            )
             .setPositiveButton(android.R.string.yes) { dialog, _ ->
                 dialog.dismiss()
 

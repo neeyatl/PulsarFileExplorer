@@ -23,7 +23,7 @@
     <string name="file_already_exists">File with the same name already exists</string>
     <string name="file_deleted_successfully">File deleted successfully</string>
     <string name="file_cannot_be_deleted">File cannot be deleted</string>
-    <string name="directory_delete_warning">All files in the folder will be lost forever. Are you sure you want to continue?</string>
+    <string name="directory_delete_warning">All data from the folder will be lost forever. Are you sure you want to continue?</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="delete_file">Delete File</string>
     <string name="name_cannot_start_with_a_dot">Name cannot start with a dot (.)</string>
