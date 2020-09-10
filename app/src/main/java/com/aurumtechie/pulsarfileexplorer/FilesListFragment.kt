@@ -209,7 +209,10 @@ class FilesListFragment(private var path: String) : ListFragment(),
         }
 
         MaterialAlertDialogBuilder(context)
-            .setTitle(if (file.isDirectory) R.string.delete_folder else R.string.delete_file)
+            .setTitle(
+                "${if (file.isDirectory) getString(R.string.delete_folder) else getString(R.string.delete_file)} " +
+                        "\"${file.name}\""
+            )
             .setMessage(if (file.isDirectory) R.string.directory_delete_warning else R.string.are_you_sure)
             .setPositiveButton(android.R.string.yes) { dialog, _ ->
                 dialog.dismiss()
